@@ -4,10 +4,8 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>API Reference</title>
+    <title>Money transfer API Standards v1.0</title>
 
-    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
-    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
     <style>
       .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
@@ -88,10 +86,12 @@
   color: #90a959;
 }
     </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;]">
+  <body class="index" data-languages="[&quot;shell&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -102,8 +102,6 @@
       <img src="images/logo.png" />
         <div class="lang-selector">
               <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -112,8 +110,7 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
-            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
+            <li><a href='mailto:partners@moneytis.com'>Tell us your api is ready !</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
@@ -121,226 +118,550 @@
       <div class="content">
         <h1 id="introduction">Introduction</h1>
 
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
+<p>This document is the first technical part of the Money Transfer API Standards.
+It documents how to provide efficiently real time rates to third parties.</p>
 
-<p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
-
-<p>This example API documentation page was created with <a href="https://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&rsquo;s documentation.</p>
-
-<h1 id="authentication">Authentication</h1>
+          <h1 id="supported-http-codes">Supported HTTP Codes</h1>
 
 <blockquote>
-<p>To authorize, use this code:</p>
+<p>Example of data JSON structured returns in case of error : </p>
 </blockquote>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+   </span><span class="nt">"status"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"message"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"the date expirationDate must be after today"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
+<table><thead>
+<tr>
+<th>Code</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>200</td>
+<td>OK</td>
+<td>Everything went fine</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Bad Request</td>
+<td>Server could not correctly process request</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorised</td>
+<td>Authorisation required to process request</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>Access forbidden</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found</td>
+<td>Resource not found</td>
+</tr>
+<tr>
+<td>405</td>
+<td>Method Not Allowed</td>
+<td>Method not allowed for resource</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error</td>
+<td>Error occurred on the server side</td>
+</tr>
+</tbody></table>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
+<p>In case of error, the API should return a HTTP Code corresponding to the issue with additional information : </p>
 
-<blockquote>
-<p>Make sure to replace <code class="prettyprint">meowmeowmeow</code> with your API key.</p>
-</blockquote>
+<ul>
+<li>“message” is a human reading abstract message of the error</li>
+</ul>
 
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
+          <h1 id="standards">Standards</h1>
 
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
+<table><thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Date</td>
+<td>Dates are standardised in ISO 8601</td>
+</tr>
+<tr>
+<td>Country</td>
+<td>Countries are standardised with their ISO 3166-1 alpha-2 code</td>
+</tr>
+<tr>
+<td>Currency</td>
+<td>Currencies are standardised with their ISO 4217 code</td>
+</tr>
+</tbody></table>
 
-<p><code class="prettyprint">Authorization: meowmeowmeow</code></p>
+<p>Mains terms used all along this document :</p>
 
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
+<ul>
+<li><p>SENDER: the natural or legal person who sends the money</p></li>
+<li><p>RECIPIENT: the natural or legal person who receives the money</p></li>
+<li><p>QUOTE: Define what is possible to do between 2 countries for a specific  amount (including a list of options)</p></li>
+<li><p>OPTION: A specific part of the quote, defining a way to pay, a way to receive and the fees associated</p></li>
+<li><p>TRANSACTION: A transaction is defined by one SENDER, one RECIPIENT and one OPTION</p></li>
+</ul>
 
-<h1 id="kittens">Kittens</h1>
+          <h1 id="level-1-real-time-rates">Level 1 - Real time rates</h1>
 
-<h2 id="get-all-kittens">Get All Kittens</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<h2 id="use-cases">Use cases</h2>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
+<h3 id="list-of-countries-provided">List of countries provided</h3>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
+<p>To allow external services to integrate your solution you need to allow the service to retrieve the countries you operate in.</p>
+
+<p>This API endpoint will be called in the best case only once a day and stored by the external service.</p>
+
+<p><img src="images/usecase-country.png" /></p>
+
+<h3 id="retrieve-a-quote">Retrieve a quote</h3>
+
+<p>The external service will ask a quote from a specific country to another one and for a specific amount in order to receive all the possible combinations to transfer the money  (ways of paying, ways of receiving and how much you would receive for each combination)</p>
+
+<p><img src="images/usecase-quote.png" /></p>
+
+<h2 id="entry-points">Entry points</h2>
+
+<h3 id="countries">Countries</h3>
+
+<h4 id="get-countries-get">Get countries [GET]</h4>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Path</td>
+<td>/countries</td>
+</tr>
+<tr>
+<td>Method</td>
+<td>GET</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Optional</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Get all countries provided</td>
+</tr>
+</tbody></table>
+
+<h5 id="1-request">1. request</h5>
+
+<p>No parameters given</p>
+
+<h5 id="2-response">2. Response</h5>
+<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/v0.1/countries"</span>
 </code></pre>
 
 <blockquote>
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"countryIso"</span><span class="p">:</span><span class="s2">"FR"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"isSending"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"isReceiving"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"currenciesFrom"</span><span class="p">:[</span><span class="s2">"EUR"</span><span class="p">,</span><span class="s2">"USD"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retrieves all kittens.</p>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><code class="prettyprint">GET http://example.com/api/kittens</code></p>
-
-<h3 id="query-parameters">Query Parameters</h3>
+<p>The response is an array :</p>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Default</th>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>countryIso</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Country</td>
 </tr>
 <tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>isSending</td>
+<td>boolean</td>
+<td>Mandatory</td>
+<td>true if the country is available to send money from</td>
+</tr>
+<tr>
+<td>isReceiving</td>
+<td>boolean</td>
+<td>Mandatory</td>
+<td>true if the country is available to send money to</td>
+</tr>
+<tr>
+<td>currenciesFrom</td>
+<td>array</td>
+<td>Conditional</td>
+<td>List of Currencies available to pay the transaction</td>
+</tr>
+<tr>
+<td>currenciesTo</td>
+<td>array</td>
+<td>Conditional</td>
+<td>List of Currencies available to receive money</td>
 </tr>
 </tbody></table>
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+<h3 id="quotes">Quotes</h3>
+
+<h4 id="get-quote-get">Get quote [GET]</h4>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Path</td>
+<td>/quote</td>
+</tr>
+<tr>
+<td>Method</td>
+<td>GET</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Optional</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Get options for a corridor and an amount</td>
+</tr>
+</tbody></table>
+
+<h5 id="1-request">1. request</h5>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>countryFrom</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Sending country</td>
+</tr>
+<tr>
+<td>currencyFrom</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Sending currency</td>
+</tr>
+<tr>
+<td>countryTo</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Reception country</td>
+</tr>
+<tr>
+<td>currencyTo</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Reception currency</td>
+</tr>
+<tr>
+<td>paymentAmount</td>
+<td>decimal</td>
+<td>Conditional</td>
+<td>Sending amount requested (expressed in currencyFrom)</td>
+</tr>
+<tr>
+<td>receptionAmount</td>
+<td>decimal</td>
+<td>Conditional</td>
+<td>Receiving amount requested (expressed in currencyTo)</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Either fill paymentAmount or receptionAmount.
 </aside>
 
-<h2 id="get-a-specific-kitten">Get a Specific Kitten</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<h5 id="2-response">2. Response</h5>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
+<aside class="warning">
+N.B. : PaymentAmount has to be all fee included. This is the exact amount the user will pay.
+</aside>
+<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/v0.1/quote?
+countryFrom=FR&amp;currencyFrom=EUR&amp;countryTo=MX&amp;currencyTo=MXN
+&amp;paymentAmountRequested=100"</span>
 </code></pre>
 
 <blockquote>
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+    </span><span class="nt">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> 
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"optionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"666f6f2d6261722d71757578"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"paymentMethod"</span><span class="p">:</span><span class="s2">"LOCALBANK"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"receptionMethod"</span><span class="p">:</span><span class="s2">"LOCALBANK"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"isEstimatedAmount"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"min"</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"max"</span><span class="p">:</span><span class="mi">1000000000</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"optionDetails"</span><span class="w"> </span><span class="p">:</span><span class="w"> 
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"paymentAmount"</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"receptionAmount"</span><span class="p">:</span><span class="mf">1784.45</span><span class="p">,</span><span class="w">  
+                    </span><span class="nt">"rate"</span><span class="p">:</span><span class="mf">18.02299</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"quoteExpiration"</span><span class="p">:</span><span class="mi">12569537329</span><span class="p">,</span><span class="w">  
+                    </span><span class="nt">"fee"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"time"</span><span class="p">:{</span><span class="nt">"b"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="nt">"d"</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span><span class="w"> 
+                </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w"> 
+    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retrieves a specific kitten.</p>
-
-<aside class="warning">Inside HTML code blocks like this one, you can&rsquo;t use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><code class="prettyprint">GET http://example.com/kittens/&lt;ID&gt;</code></p>
-
-<h3 id="url-parameters">URL Parameters</h3>
-
 <table><thead>
 <tr>
-<th>Parameter</th>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>ID</td>
-<td>The ID of the kitten to retrieve</td>
+<td>options</td>
+<td>Array</td>
+<td>Mandatory</td>
+<td>Array of options provided</td>
 </tr>
 </tbody></table>
 
-          <h1 id="errors">Errors</h1>
-
-<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the `includes` folder and add them to the top of your `index.md`&rsquo;s frontmatter. Files are included in the order listed.</aside>
-
-<p>The Kittn API uses the following error codes:</p>
+<ul>
+<li>Options</li>
+</ul>
 
 <table><thead>
 <tr>
-<th>Error Code</th>
-<th>Meaning</th>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>400</td>
-<td>Bad Request &ndash; Your request sucks</td>
+<td>optionId</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Unique option id</td>
 </tr>
 <tr>
-<td>401</td>
-<td>Unauthorized &ndash; Your API key is wrong</td>
+<td>paymentMethod</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Payment Option code(credit card, wire transfer…) &ndash; see dictionnary</td>
 </tr>
 <tr>
-<td>403</td>
-<td>Forbidden &ndash; The kitten requested is hidden for administrators only</td>
+<td>receptionMethod</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Reception Option code (Cash, wire transfer…) &ndash; see dictionnary</td>
 </tr>
 <tr>
-<td>404</td>
-<td>Not Found &ndash; The specified kitten could not be found</td>
+<td>isEstimatedAmount</td>
+<td>boolean</td>
+<td>Mandatory</td>
+<td>true, if the receptionAmount is estimated</td>
 </tr>
 <tr>
-<td>405</td>
-<td>Method Not Allowed &ndash; You tried to access a kitten with an invalid method</td>
+<td>min</td>
+<td>decimal</td>
+<td>Mandatory</td>
+<td>Minimum paymentAmount for a transaction (expressed in currencyFrom)</td>
 </tr>
 <tr>
-<td>406</td>
-<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
+<td>max</td>
+<td>decimal</td>
+<td>Mandatory</td>
+<td>Maximum paymentAmount for a transaction (expressed in currencyFrom)</td>
 </tr>
 <tr>
-<td>410</td>
-<td>Gone &ndash; The kitten requested has been removed from our servers</td>
+<td>urgent</td>
+<td>boolean</td>
+<td>Optional</td>
+<td>True if the option is a “urgent” feature</td>
 </tr>
 <tr>
-<td>418</td>
-<td>I&rsquo;m a teapot</td>
+<td>who</td>
+<td>integer</td>
+<td>Optional</td>
+<td>1. if this solution is only available to send money to the user itself</td>
 </tr>
 <tr>
-<td>429</td>
-<td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slow down!</td>
+<td></td>
+<td></td>
+<td></td>
+<td>2. if this solution is only available to send to someone who is not the sender (ex : sending to an email)</td>
 </tr>
 <tr>
-<td>500</td>
-<td>Internal Server Error &ndash; We had a problem with our server. Try again later.</td>
+<td></td>
+<td></td>
+<td></td>
+<td>0. Available for both (by default)&ldquo;</td>
 </tr>
 <tr>
-<td>503</td>
-<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintanance. Please try again later.</td>
+<td>optionDetails</td>
+<td>Object</td>
+<td>Optional</td>
+<td>All the main information for the option (fees, amounts). This object can be null if the amount asked is outside the limits (min - max)</td>
 </tr>
 </tbody></table>
+
+<ul>
+<li>optionDetails<br></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>paymentAmount</td>
+<td>decimal</td>
+<td>Mandatory</td>
+<td>Amount to pay (expressed in currencyFrom)</td>
+</tr>
+<tr>
+<td>receptionAmount</td>
+<td>decimal</td>
+<td>Mandatory</td>
+<td>Reception amount (expressed in currencyTo)</td>
+</tr>
+<tr>
+<td>rate</td>
+<td>decimal</td>
+<td>Mandatory</td>
+<td>Exchange rate used by the mto</td>
+</tr>
+<tr>
+<td>quoteExpiration</td>
+<td>dateTime</td>
+<td>Mandatory</td>
+<td>The time at which the quote will be considered expired</td>
+</tr>
+<tr>
+<td>fee</td>
+<td>decimal</td>
+<td>Mandatory</td>
+<td>Fixed fees applied to the transaction</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>This fee is calculated with the formula : (paymentAmount - fee)*rate = receptionAmount</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>(expressed in currencyFrom)</td>
+</tr>
+<tr>
+<td>time</td>
+<td>object</td>
+<td>Mandatory</td>
+<td>An estimation of the time required to receive the money&ndash; see below</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>Time</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>d</td>
+<td>integer</td>
+<td>Mandatory</td>
+<td>Number of days estimated between the transaction creation and the delivery</td>
+</tr>
+<tr>
+<td>b</td>
+<td>boolean</td>
+<td>Mandatory</td>
+<td>true if the days are business days</td>
+</tr>
+</tbody></table>
+
+          <h1 id="dictionnary">Dictionnary</h1>
+
+<h2 id="payment-option-values">Payment option values</h2>
+
+<ul>
+<li>LOCALBANK</li>
+<li>DEBITCARD</li>
+<li>CREDITCARD<br></li>
+<li>CASH</li>
+<li>IDEAL</li>
+<li>SOFORT</li>
+<li>BANKGIRO</li>
+<li>ACH</li>
+<li>SWIFT</li>
+<li>INTERAC</li>
+<li>POLI</li>
+<li>BUSINESSCARD</li>
+</ul>
+
+<h2 id="reception-option-values">Reception option values</h2>
+
+<ul>
+<li>LOCALBANK</li>
+<li>MOBILPHONE</li>
+<li>CASH</li>
+<li>ATM</li>
+<li>MOBILTOPUP</li>
+<li>PHYSICDELIVERY</li>
+<li>BILLPAY</li>
+<li>MAIL</li>
+<li>PREPAIDCARD</li>
+</ul>
 
       </div>
       <div class="dark-box">
           <div class="lang-selector">
                 <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
           </div>
       </div>
     </div>
