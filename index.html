@@ -267,7 +267,7 @@ It documents how to provide efficiently real time rates to third parties.</p>
 <p>No parameters given</p>
 
 <h5 id="2-response">2. Response</h5>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/v0.1/countries"</span>
+<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/v1.0/countries"</span>
 </code></pre>
 
 <blockquote>
@@ -410,9 +410,9 @@ Either fill paymentAmount or receptionAmount.
 <aside class="warning">
 N.B. : PaymentAmount has to be all fee included. This is the exact amount the user will pay.
 </aside>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/v0.1/quote?
+<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/v1.0/quote?
 countryFrom=FR&amp;currencyFrom=EUR&amp;countryTo=MX&amp;currencyTo=MXN
-&amp;paymentAmountRequested=100"</span>
+&amp;paymentAmount=100"</span>
 </code></pre>
 
 <blockquote>
