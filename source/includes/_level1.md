@@ -45,7 +45,7 @@ No parameters given
 
 
 ```shell
-curl "http://example.com/api/v0.1/countries"
+curl "http://example.com/api/v1.0/countries"
 ```
 
 > The above command returns JSON structured like this:
@@ -115,9 +115,9 @@ N.B. : PaymentAmount has to be all fee included. This is the exact amount the us
 
 
 ```shell
-curl "http://example.com/api/v0.1/quote?
+curl "http://example.com/api/v1.0/quote?
 countryFrom=FR&currencyFrom=EUR&countryTo=MX&currencyTo=MXN
-&paymentAmountRequested=100"
+&paymentAmount=100"
 ```
 
 > The above command returns JSON structured like this:
