@@ -274,12 +274,19 @@ It documents how to provide efficiently real time rates to third parties.</p>
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"countryIso"</span><span class="p">:</span><span class="s2">"FR"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"isSending"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"isReceiving"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"currenciesFrom"</span><span class="p">:[</span><span class="s2">"EUR"</span><span class="p">,</span><span class="s2">"USD"</span><span class="p">]</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+     </span><span class="p">{</span><span class="w">
+         </span><span class="nt">"countryIso"</span><span class="p">:</span><span class="s2">"FR"</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"isSending"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"isReceiving"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"currenciesFrom"</span><span class="p">:[</span><span class="s2">"EUR"</span><span class="p">,</span><span class="s2">"USD"</span><span class="p">],</span><span class="w">
+         </span><span class="nt">"currenciesTo"</span><span class="p">:[</span><span class="s2">"EUR"</span><span class="p">]</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+     </span><span class="p">{</span><span class="w">
+         </span><span class="nt">"countryIso"</span><span class="p">:</span><span class="s2">"GB"</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"isSending"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"isReceiving"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"currenciesFrom"</span><span class="p">:[</span><span class="s2">"GBP"</span><span class="p">]</span><span class="w">
+     </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
 
@@ -419,25 +426,42 @@ countryFrom=FR&amp;currencyFrom=EUR&amp;countryTo=MX&amp;currencyTo=MXN
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> 
-        </span><span class="p">{</span><span class="w">
+</span><span class="nt">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+   </span><span class="p">{</span><span class="w">
             </span><span class="nt">"optionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"666f6f2d6261722d71757578"</span><span class="p">,</span><span class="w">
             </span><span class="nt">"paymentMethod"</span><span class="p">:</span><span class="s2">"LOCALBANK"</span><span class="p">,</span><span class="w">
             </span><span class="nt">"receptionMethod"</span><span class="p">:</span><span class="s2">"LOCALBANK"</span><span class="p">,</span><span class="w">
             </span><span class="nt">"isEstimatedAmount"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
             </span><span class="nt">"min"</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span><span class="w">
             </span><span class="nt">"max"</span><span class="p">:</span><span class="mi">1000000000</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"optionDetails"</span><span class="w"> </span><span class="p">:</span><span class="w"> 
+            </span><span class="nt">"optionDetails"</span><span class="w"> </span><span class="p">:</span><span class="w">
                 </span><span class="p">{</span><span class="w">
                     </span><span class="nt">"paymentAmount"</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="w">
                     </span><span class="nt">"receptionAmount"</span><span class="p">:</span><span class="mf">1784.45</span><span class="p">,</span><span class="w">  
                     </span><span class="nt">"rate"</span><span class="p">:</span><span class="mf">18.02299</span><span class="p">,</span><span class="w">
                     </span><span class="nt">"quoteExpiration"</span><span class="p">:</span><span class="mi">12569537329</span><span class="p">,</span><span class="w">  
                     </span><span class="nt">"fee"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"time"</span><span class="p">:{</span><span class="nt">"b"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="nt">"d"</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span><span class="w"> 
+                    </span><span class="nt">"time"</span><span class="p">:{</span><span class="nt">"b"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="nt">"d"</span><span class="p">:</span><span class="mi">3</span><span class="p">}</span><span class="w">
                 </span><span class="p">}</span><span class="w">
-        </span><span class="p">}</span><span class="w"> 
-    </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+   </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"optionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"666f6f3d2261722d73456229"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"paymentMethod"</span><span class="p">:</span><span class="s2">"CREDITCARD"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"receptionMethod"</span><span class="p">:</span><span class="s2">"CASH"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"isEstimatedAmount"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"min"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"max"</span><span class="p">:</span><span class="mi">1000</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"optionDetails"</span><span class="w"> </span><span class="p">:</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"paymentAmount"</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"receptionAmount"</span><span class="p">:</span><span class="mf">1622.07</span><span class="p">,</span><span class="w">  
+                    </span><span class="nt">"rate"</span><span class="p">:</span><span class="mf">18.02299</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"quoteExpiration"</span><span class="p">:</span><span class="mi">12569537329</span><span class="p">,</span><span class="w">  
+                    </span><span class="nt">"fee"</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"time"</span><span class="p">:{</span><span class="nt">"b"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">"d"</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+ </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
