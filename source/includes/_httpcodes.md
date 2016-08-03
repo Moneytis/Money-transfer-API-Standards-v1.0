@@ -1,6 +1,6 @@
 # Supported HTTP Codes
 
-> Example of data JSON structured returns in case of error : 
+> Example of data JSON structured returned in case of error : 
 
 ```json
 {

@@ -52,12 +52,19 @@ curl "http://example.com/api/v1.0/countries"
 
 ```json
 [
-	{
-		"countryIso":"FR",
-		"isSending":true,
-		"isReceiving":false,
-    	"currenciesFrom":["EUR","USD"]
-	}
+     {
+         "countryIso":"FR",
+         "isSending":true,
+         "isReceiving":true,
+         "currenciesFrom":["EUR","USD"],
+         "currenciesTo":["EUR"]
+      },
+     {
+         "countryIso":"GB",
+         "isSending":true,
+         "isReceiving":false,
+         "currenciesFrom":["GBP"]
+     }
 ]
 ```
 
@@ -124,25 +131,42 @@ countryFrom=FR&currencyFrom=EUR&countryTo=MX&currencyTo=MXN
 
 ```json
 {
-	"options": [ 
-		{
-			"optionId": "666f6f2d6261722d71757578",
-			"paymentMethod":"LOCALBANK",
-			"receptionMethod":"LOCALBANK",
-			"isEstimatedAmount":false,
-			"min":10,
-			"max":1000000000,
-			"optionDetails" : 
-				{
-					"paymentAmount":100,
-					"receptionAmount":1784.45,	
-					"rate":18.02299,
-					"quoteExpiration":12569537329,	
-					"fee":1,
-					"time":{"b":true,"d":1}	
-				}
-		} 
-	]
+"options": [
+   {
+            "optionId": "666f6f2d6261722d71757578",
+            "paymentMethod":"LOCALBANK",
+            "receptionMethod":"LOCALBANK",
+            "isEstimatedAmount":false,
+            "min":10,
+            "max":1000000000,
+            "optionDetails" :
+                {
+                    "paymentAmount":100,
+                    "receptionAmount":1784.45,  
+                    "rate":18.02299,
+                    "quoteExpiration":12569537329,  
+                    "fee":1,
+                    "time":{"b":true,"d":3}
+                }
+    },
+   {
+            "optionId": "666f6f3d2261722d73456229",
+            "paymentMethod":"CREDITCARD",
+            "receptionMethod":"CASH",
+            "isEstimatedAmount":false,
+            "min":1,
+            "max":1000,
+            "optionDetails" :
+                {
+                    "paymentAmount":100,
+                    "receptionAmount":1622.07,  
+                    "rate":18.02299,
+                    "quoteExpiration":12569537329,  
+                    "fee":10,
+                    "time":{"b":false,"d":0}
+                }
+    }
+ ]
 }
 ```
 
