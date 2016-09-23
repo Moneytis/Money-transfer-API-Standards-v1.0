@@ -649,6 +649,1180 @@ countryFrom=FR&amp;currencyFrom=EUR&amp;countryTo=MX&amp;currencyTo=MXN
 </tr>
 </tbody></table>
 
+          <h1 id="level-2-create-and-follow-transactions">Level 2 - Create and follow transactions</h1>
+
+<h2 id="use-cases">Use cases</h2>
+
+<h3 id="transaction-creation">Transaction Creation</h3>
+
+<p>Create a transaction require 2 entries : </p>
+
+<ol>
+<li>Create the recipient &ndash; see Create recipient [POST] </li>
+<li>Create the transaction itself &ndash; see Create transaction [POST]</li>
+</ol>
+
+<h3 id="transaction-payment">Transaction payment</h3>
+
+<p>Return the information for the user to do the payment &ndash; see  transaction payment information [GET</p>
+
+<h3 id="push-transaction-notifications">Push Transaction notifications</h3>
+
+<p>A webhook which alerts the third party of the changes in the transaction status. &ndash; see Get transaction [NOTIFICATION]</p>
+
+<h2 id="entry-points">Entry points</h2>
+
+<h3 id="recipient">Recipient</h3>
+
+<h4 id="create-recipient-post">Create Recipient [POST]</h4>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Path</td>
+<td>/sender/:senderid/recipient</td>
+</tr>
+<tr>
+<td>Method</td>
+<td>POST</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Necessary</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Create a new recipient.</td>
+</tr>
+<tr>
+<td></td>
+<td>The sender is the client to which the recipient is attached.</td>
+</tr>
+<tr>
+<td></td>
+<td>A sender can be an individual or a company who has an account with you.</td>
+</tr>
+</tbody></table>
+
+<h5 id="1-request">1. request</h5>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>:senderid</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Identification code of the sender (url parameter)</td>
+</tr>
+<tr>
+<td>*</td>
+<td>*</td>
+<td>*</td>
+<td>see Recipient standardized</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+The recipient information will be in the body with as index the &ldquo;name&rdquo; of the fields given in the recipient documentation (see Recipient standarized).
+</aside>
+
+<h5 id="2-response">2. Response</h5>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> -X POST -d
+<span class="s1">'{
+   "recipientType": "INDIVIDUAL",
+   "firstName" : "Jean",
+   "lastName" : "Dujardin",
+   "receptionType": "LOCAL_BANK",
+   "recipientDetails" : {
+       "iban" : "FR7630004003200001019471656",
+       "bic": "ING23123XXX"
+    }
+}'</span> <span class="s2">"http://example.com/api/v1.0/recipient"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w"> 
+   </span><span class="nt">"recipientId"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"121323"</span><span class="p">,</span><span class="w"> 
+   </span><span class="nt">"recipientType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INDIVIDUAL"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"firstName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Jean"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"lastName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Dujardin"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"receptionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LOCAL_BANK"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"recipientDetails"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+       </span><span class="nt">"iban"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"FR7630004003200001019471656"</span><span class="p">,</span><span class="w">
+       </span><span class="nt">"bic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ING23123XXX"</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>The recipient information are returned.</p>
+
+<h3 id="transaction">Transaction</h3>
+
+<h4 id="create-transaction-post">Create transaction [POST]</h4>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Path</td>
+<td>/transaction</td>
+</tr>
+<tr>
+<td>Method</td>
+<td>POST</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Necessary</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Create a new transaction</td>
+</tr>
+</tbody></table>
+
+<h5 id="1-request">1. request</h5>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>optionId</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Identification code of the quote</td>
+</tr>
+<tr>
+<td>senderId</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Identification code of the sender</td>
+</tr>
+<tr>
+<td>recipientId</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Identification code of the recipient</td>
+</tr>
+</tbody></table>
+
+<h5 id="2-response">2. Response</h5>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> -X POST -d
+<span class="s1">'{
+ optionId: "1298212189821",
+ senderId: "233239082389023",
+ recipientId: "233208932889",
+}'</span> <span class="s2">"http://example.com/api/v1.0/transaction"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">    
+  </span><span class="nt">"transactionId"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"433239082389023"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"optionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1298212189821"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"senderId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"233239082389023"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"recipientId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"233208932889"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>The transaction information are returned or an error code and message. (see level 1)</p>
+
+<h4 id="get-transaction-notification">Get transaction [NOTIFICATION]</h4>
+
+<p>When one event is triggered on a transaction, you should send an HTTPS POST call to the Webhook’s url. The Webhook allows to track the state changes of the transaction in real time.</p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Path</td>
+<td>EXTERNAL_SERVICE_URL</td>
+</tr>
+<tr>
+<td>Method</td>
+<td>Webhook</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Necessary</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Send to the external service the event about the transaction</td>
+</tr>
+</tbody></table>
+
+<h5 id="1-request">1. request</h5>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>transactionId</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Identification code of the transaction</td>
+</tr>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Notification type - see below</td>
+</tr>
+<tr>
+<td>data</td>
+<td>Object</td>
+<td>Optional</td>
+<td>Notification data</td>
+</tr>
+</tbody></table>
+
+<h5 id="2-response">2. Response</h5>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> -X POST -d
+<span class="s1">'{
+    type : "PAYMENT_ACCEPTED"
+}'</span> <span class="s2">"http://webhook.handler.com/notification"</span>
+</code></pre>
+
+<p>The acknowledgment of the notification is returned by the third party: empty body with http Code 200.</p>
+
+<p>If the third party do not acknowledge. Your server should try to send the notification again every 10 minutes, up to 5 times. If there is still no acknowledge, an email should be sent to the third party technical contact.</p>
+
+<h5 id="3-dictionnary">3. Dictionnary</h5>
+
+<p>Notification type values</p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>PAYMENT_ACCEPTED</td>
+<td>The money transfer operator received the money for the transaction (or consider that the money will be paid due to special mention in contract)</td>
+</tr>
+<tr>
+<td>PAYMENT_REJECTED</td>
+<td>An error occur during the payment. The reason has to be add in data, ie :</td>
+</tr>
+<tr>
+<td></td>
+<td>{ type: PAYMENT_REJECTED, data: { code: 1001} }</td>
+</tr>
+<tr>
+<td></td>
+<td>Code 1001 : transaction mispaid - amount inferior</td>
+</tr>
+<tr>
+<td></td>
+<td>Code 1002 : transaction mispaid - amount superior</td>
+</tr>
+<tr>
+<td>CANCELED</td>
+<td>Transaction has been canceled. The reason has to be add in data, ie :</td>
+</tr>
+<tr>
+<td></td>
+<td>{ type: ‘canceled’, data: { code: 1103 } }</td>
+</tr>
+<tr>
+<td></td>
+<td>Code 1103: Payment not received in time</td>
+</tr>
+<tr>
+<td>COMPLETE</td>
+<td>Recipient has received the money. The transaction is done.</td>
+</tr>
+</tbody></table>
+
+<p>It will happen that the Money Transfer Operator and the Client or Third party have a special contract mentioning that the settlement of several transactions can arrive after the money delivery by the Money Transfer Operator. In these cases, a Push notification &ldquo;PAYMENT_RECEIVED&rdquo; can be sent directly</p>
+
+<h4 id="transaction-payment-information-get">transaction payment information [GET]</h4>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Path</td>
+<td>/transaction/:transactionId/paymentInformation</td>
+</tr>
+<tr>
+<td>Method</td>
+<td>GET</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Necessary</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Get the transaction payment information</td>
+</tr>
+</tbody></table>
+
+<h5 id="1-request">1. request</h5>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>transactionId</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Identification code of the transaction</td>
+</tr>
+</tbody></table>
+
+<h5 id="2-response">2. Response</h5>
+<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/v1.0/transaction/120932743321/paymentInformation"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"paymentInformation"</span><span class="p">:</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10000"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EUR"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"paymentType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LOCAL_BANK"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"paymentDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+           </span><span class="nt">"bankName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BANKOGAN"</span><span class="p">,</span><span class="w">
+           </span><span class="nt">"bankCountry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FR"</span><span class="p">,</span><span class="w">
+           </span><span class="nt">"bankDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"iban"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FR230532923502343932"</span><span class="p">,</span><span class="w">
+                  </span><span class="nt">"bic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ING2412XXX"</span><span class="w">
+           </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>paymentInformation</td>
+<td>Object</td>
+<td>Mandatory</td>
+<td>Information needed to do the payment</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>paymentInformation</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>amount</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Positive and not zero</td>
+<td>Amount to pay</td>
+</tr>
+<tr>
+<td>currency</td>
+<td>currency</td>
+<td>Mandatory</td>
+<td>See currency</td>
+<td>Currency of the amount to pay</td>
+</tr>
+<tr>
+<td>paymentType</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Must be ‘LOCAL_BANK’</td>
+<td>Payment option of the transaction</td>
+</tr>
+<tr>
+<td>paymentDetails</td>
+<td>Object</td>
+<td>Mandatory</td>
+<td>See below</td>
+<td>The information necessary for the payer to pay the transaction</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>paymentDetails</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>bankName</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Regex : ^.{1,100}</td>
+<td>Bank name of the account</td>
+</tr>
+<tr>
+<td>bankDetails</td>
+<td>Object</td>
+<td>Mandatory</td>
+<td>See Local bank details</td>
+<td>Details of the bank account</td>
+</tr>
+<tr>
+<td>bankCountry</td>
+<td>country</td>
+<td>Mandatory</td>
+<td>see Country</td>
+<td>Country of the bank account</td>
+</tr>
+<tr>
+<td>reference</td>
+<td>string</td>
+<td>Optional</td>
+<td>Regex : ^.{1,100}</td>
+<td>Reference of the payment</td>
+</tr>
+</tbody></table>
+
+<h3 id="recipient-standardized">Recipient Standardized</h3>
+
+<h4 id="local-bank-recipient">Local bank recipient</h4>
+
+<p>Recipient fields for bank</p>
+
+<blockquote>
+<p>Example FRANCE recipient local bank :</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+   </span><span class="nt">"recipientType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INDIVIDUAL"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"firstName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Jean"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"lastName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Dujardin"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"receptionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LOCAL_BANK"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"recipientDetails"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+       </span><span class="nt">"iban"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"FR7630004003200001019471656"</span><span class="p">,</span><span class="w">
+       </span><span class="nt">"bic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ING23123XXX"</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Example United-Kingdom recipient local bank :</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+   </span><span class="nt">"recipientType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"COMPANY"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"companyName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Virgin"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"receptionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LOCAL_BANK"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"recipientDetails"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+       </span><span class="nt">"sortCode"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"16-50-07"</span><span class="p">,</span><span class="w">
+       </span><span class="nt">"accountNumber"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"1019471656"</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Example Mongolia recipient local bank :</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+   </span><span class="nt">"recipientType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INDIVIDUAL"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"firstName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Enkhtuyaa"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"lastName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Enkhjargal"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"receptionType"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"LOCAL_BANK"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"receptionDetails"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"bic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AGMOMNUB"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"accountNumber"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"3212345678"</span><span class="w">
+   </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"address"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"street"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Denver Street #3, 11th Micro-District"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"city"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Ulaanbaatar"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"postalCode"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"14190"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"country"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"MN"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Requirement</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>recipientType</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>INDIVIDUAL, COMPANY</td>
+<td>Is the recipient an Individual or a Company</td>
+</tr>
+<tr>
+<td>companyName</td>
+<td>Conditional</td>
+<td>string</td>
+<td>Regex : ^.{1-255}</td>
+<td>If recipient is a company</td>
+</tr>
+<tr>
+<td>firstName</td>
+<td>Conditional</td>
+<td>string</td>
+<td>Regex : ^.{1-255}</td>
+<td>If recipient is a individual</td>
+</tr>
+<tr>
+<td>lastName</td>
+<td>Conditional</td>
+<td>string</td>
+<td>Regex : ^.{1-255}</td>
+<td>If recipient is a individual</td>
+</tr>
+<tr>
+<td>receptionType</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>‘LOCAL_BANK’ or ‘SWIFT’</td>
+<td>Define the format of the information supplied in receptionDetails.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>Must be the same as chosen in the option</td>
+<td></td>
+</tr>
+<tr>
+<td>receptionDetails</td>
+<td>Mandatory</td>
+<td>Object</td>
+<td>see Reception Details</td>
+<td>Data related to the money reception itself</td>
+</tr>
+<tr>
+<td>address</td>
+<td>Conditional</td>
+<td>address</td>
+<td>see address</td>
+<td>Required for Any SWIFT recipient or LOCAL_BANK transfer to CA, MX, US and SG</td>
+</tr>
+</tbody></table>
+
+<h3 id="field-type">Field type</h3>
+
+<h4 id="country">Country</h4>
+
+<p>A country is a two characters string as describe in the ISO 3166.</p>
+
+<h4 id="currency">Currency</h4>
+
+<p>A country is a three characters string as describe in the ISO 5217.</p>
+
+<h4 id="address">Address</h4>
+
+<p>An address is an object with the following fields :</p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Requirement</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>street</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^.{1,255}</td>
+<td>Street and number</td>
+</tr>
+<tr>
+<td>city</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^.{1,255}</td>
+<td>city’s address</td>
+</tr>
+<tr>
+<td>country</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>see country</td>
+<td>Country’s address</td>
+</tr>
+<tr>
+<td>postalCode</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^.{1,255}</td>
+<td>Postal code of the address</td>
+</tr>
+<tr>
+<td>state</td>
+<td>Conditional</td>
+<td>string</td>
+<td>Regex : ^.{1,255}</td>
+<td>State’s address</td>
+</tr>
+</tbody></table>
+
+<h4 id="bank-details">Bank details</h4>
+
+<h5 id="local_bank">LOCAL_BANK</h5>
+
+<ul>
+<li>For iban countries</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Requirement</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>iban</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}([A-Z0-9]?){0,16}</td>
+<td>Iban code of the recipient’s account</td>
+</tr>
+<tr>
+<td>bic</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^[0-9A-Z]{8}$</td>
+<td>^[0-9A-Z]{11}$</td>
+</tr>
+</tbody></table>
+
+<p>see List of iban countries</p>
+
+<ul>
+<li>Australia<br></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Requirement</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>BSB</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{6}$</td>
+<td>Australian bank code</td>
+</tr>
+<tr>
+<td>accountNumber</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{6,10}$</td>
+<td>Account number</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>Canada<br></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Requirement</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>routingNumber</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{9}$</td>
+<td>Canadian bank code</td>
+</tr>
+<tr>
+<td>accountNumber</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{5,12}$</td>
+<td>Account number</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>New-Zealand </li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Requirement</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>bankCode</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{6}$</td>
+<td>New Zealanders bank code</td>
+</tr>
+<tr>
+<td>accountNumber</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{1,10}$</td>
+<td>Account number</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>Hong kong </li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Requirement</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>clearingCode</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{3}$</td>
+<td>Hong kong bank code</td>
+</tr>
+<tr>
+<td>branchCode</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{3}$</td>
+<td>Branch code</td>
+</tr>
+<tr>
+<td>accountNumber</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{6,10}$</td>
+<td>Account number</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>United Kingdom </li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Requirement</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>sortCode</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{6}$</td>
+<td>British bank code</td>
+</tr>
+<tr>
+<td>accountNumber</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^[0-9A-Z]{1,50}$</td>
+<td>Account number</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>South Africa </li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Requirement</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>CBC</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{6}$</td>
+<td>South African bank code</td>
+</tr>
+<tr>
+<td>accountNumber</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{1,16}$</td>
+<td>Account number</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>United State of America</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Requirement</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>routingCode</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^[0-9A-Z]{9}$</td>
+<td>US bank code</td>
+</tr>
+<tr>
+<td>accountNumber</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{1,17}$</td>
+<td>Account number</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>Mexico</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Requirement</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>clabe</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{18}$</td>
+<td>Mexican code for account numbers</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>Singapore<br></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Requirement</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>bankCode</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{4}$</td>
+<td>Singapore bank code</td>
+</tr>
+<tr>
+<td>branchCode</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{3}$</td>
+<td>Singapore branch code</td>
+</tr>
+<tr>
+<td>accountNumber</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^\d{7-11}$</td>
+<td>Account number</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>SWIFT</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Requirement</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>bic</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^[0-9A-Z]{8}$</td>
+<td>^[0-9A-Z]{11}$</td>
+</tr>
+<tr>
+<td>accountNumber</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^[0-9A-Z]{1,50}$</td>
+<td>Account number</td>
+</tr>
+</tbody></table>
+
+<h4 id="list-iban-countries">List Iban Countries</h4>
+
+<p>List of Iban countries supported in this standard : </p>
+
+<table><thead>
+<tr>
+<th>Country name</th>
+<th>Country iso2</th>
+<th>Currency</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Austria</td>
+<td>AT</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Belgium</td>
+<td>BE</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Cyprus</td>
+<td>CY</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Czech Republic</td>
+<td>CZ</td>
+<td>CZK</td>
+</tr>
+<tr>
+<td>Denmark</td>
+<td>DK</td>
+<td>DKK</td>
+</tr>
+<tr>
+<td>Estonia</td>
+<td>EE</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Finland</td>
+<td>FI</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>France</td>
+<td>FR</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>France</td>
+<td>FR</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Germany</td>
+<td>DE</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Hungary</td>
+<td>HU</td>
+<td>HUF</td>
+</tr>
+<tr>
+<td>Ireland</td>
+<td>IE</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Israel</td>
+<td>IL</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Israel</td>
+<td>IL</td>
+<td>ILS</td>
+</tr>
+<tr>
+<td>Italy</td>
+<td>IT</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Latvia</td>
+<td>LV</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Lithuania</td>
+<td>LT</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Luxembourg</td>
+<td>LU</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Malta</td>
+<td>MT</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Monaco</td>
+<td>MC</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Netherland</td>
+<td>NL</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Norway</td>
+<td>NO</td>
+<td>NOK</td>
+</tr>
+<tr>
+<td>Poland</td>
+<td>PL</td>
+<td>PLN</td>
+</tr>
+<tr>
+<td>Portugal</td>
+<td>PT</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>San Marino</td>
+<td>SM</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Slovakia</td>
+<td>SK</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Slovenia</td>
+<td>SI</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Spain</td>
+<td>ES</td>
+<td>EUR</td>
+</tr>
+<tr>
+<td>Sweden</td>
+<td>SE</td>
+<td>SEK</td>
+</tr>
+<tr>
+<td>Switzerland</td>
+<td>CH</td>
+<td>CHF</td>
+</tr>
+<tr>
+<td>United Arab Emirates</td>
+<td>AE</td>
+<td>AED</td>
+</tr>
+</tbody></table>
+
           <h1 id="dictionnary">Dictionnary</h1>
 
 <h2 id="payment-option-values">Payment option values</h2>
