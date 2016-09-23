@@ -11,7 +11,7 @@ Create a transaction require 2 entries :
 
 ### Transaction payment
 
-Return the information for the user to do the payment -- see  transaction payment information [GET
+Return the information for the user to do the payment -- see  transaction payment information [GET]
 
 ### Push Transaction notifications
 
