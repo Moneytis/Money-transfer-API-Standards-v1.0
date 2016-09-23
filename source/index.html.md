@@ -12,6 +12,7 @@ includes:
   - httpcodes
   - standards
   - level1
+  - level2
   - dictionnary
 
 search: true
