@@ -655,7 +655,7 @@ countryFrom=FR&amp;currencyFrom=EUR&amp;countryTo=MX&amp;currencyTo=MXN
 
 <h3 id="transaction-creation">Transaction Creation</h3>
 
-<p>Create a transaction require 2 entries : </p>
+<p>Creating a transaction requires 2 entries : </p>
 
 <ol>
 <li>Create the recipient &ndash; see Create recipient [POST] </li>
@@ -733,7 +733,7 @@ countryFrom=FR&amp;currencyFrom=EUR&amp;countryTo=MX&amp;currencyTo=MXN
 </tbody></table>
 
 <aside class="notice">
-The recipient information will be in the body with as index the &ldquo;name&rdquo; of the fields given in the recipient documentation (see Recipient standarized).
+The recipient information will be in the body with as index the &ldquo;name&rdquo; of the fields given in the recipient documentation (see Recipient standardized).
 </aside>
 
 <h5 id="2-response">2. Response</h5>
@@ -915,9 +915,9 @@ The recipient information will be in the body with as index the &ldquo;name&rdqu
 
 <p>The acknowledgment of the notification is returned by the third party: empty body with http Code 200.</p>
 
-<p>If the third party do not acknowledge. Your server should try to send the notification again every 10 minutes, up to 5 times. If there is still no acknowledge, an email should be sent to the third party technical contact.</p>
+<p>If the third party does not acknowledge. Your server should try to send the notification again every 10 minutes, up to 5 times. If there is still no acknowledgement, an email should be sent to the third party technical contact.</p>
 
-<h5 id="3-dictionnary">3. Dictionnary</h5>
+<h5 id="3-dictionary">3. Dictionary</h5>
 
 <p>Notification type values</p>
 
@@ -948,12 +948,12 @@ The recipient information will be in the body with as index the &ldquo;name&rdqu
 <td>Code 1002 : transaction mispaid - amount superior</td>
 </tr>
 <tr>
-<td>CANCELED</td>
-<td>Transaction has been canceled. The reason has to be add in data, ie :</td>
+<td>CANCELLED</td>
+<td>Transaction has been cancelled. The reason has to be added in data, ie :</td>
 </tr>
 <tr>
 <td></td>
-<td>{ type: ‘canceled’, data: { code: 1103 } }</td>
+<td>{ type: &lsquo;cancelled&rsquo;, data: { code: 1103 } }</td>
 </tr>
 <tr>
 <td></td>
@@ -965,7 +965,9 @@ The recipient information will be in the body with as index the &ldquo;name&rdqu
 </tr>
 </tbody></table>
 
-<p>It will happen that the Money Transfer Operator and the Client or Third party have a special contract mentioning that the settlement of several transactions can arrive after the money delivery by the Money Transfer Operator. In these cases, a Push notification &ldquo;PAYMENT_RECEIVED&rdquo; can be sent directly</p>
+<aside class="notice">
+If the Money transfer operator and the client have specific terms in the contract about a settlement date, a Push notification &ldquo;PAYMENT_ACCEPTED&rdquo; can be sent directly
+</aside>
 
 <h4 id="transaction-payment-information-get">transaction payment information [GET]</h4>
 
