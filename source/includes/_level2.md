@@ -185,9 +185,9 @@ CANCELLED | Transaction has been cancelled. The reason has to be added in data, 
      | Code 1103: Payment not received in time
 COMPLETE | Recipient has received the money. The transaction is done.
 
-
-It will happen that the Money Transfer Operator and the Client or Third party have a special contract mentioning that the settlement of several transactions can arrive after the money delivery by the Money Transfer Operator. In these cases, a Push notification "PAYMENT_RECEIVED" can be sent directly
-
+<aside class="notice">
+If the Money transfer operator and the client have specific terms in the contract about a settlement date, a Push notification "PAYMENT_ACCEPTED" can be sent directly
+</aside>
 
 
 #### transaction payment information [GET]
