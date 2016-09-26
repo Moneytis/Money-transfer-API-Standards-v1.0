@@ -4,7 +4,7 @@
 
 ### Transaction Creation
 
-Create a transaction require 2 entries : 
+Creating a transaction requires 2 entries : 
 
 1. Create the recipient -- see Create recipient [POST] 
 2. Create the transaction itself -- see Create transaction [POST]
@@ -46,7 +46,7 @@ Name    |   Type    |   Requirement |   Description
 *    |   *   |   * |   see Recipient standardized
 
 <aside class="notice">
-The recipient information will be in the body with as index the "name" of the fields given in the recipient documentation (see Recipient standarized).
+The recipient information will be in the body with as index the "name" of the fields given in the recipient documentation (see Recipient standardized).
 </aside>
 
 ##### 2. Response
@@ -166,10 +166,10 @@ curl -H "Content-Type: application/json" -X POST -d
 
 The acknowledgment of the notification is returned by the third party: empty body with http Code 200.
 
-If the third party do not acknowledge. Your server should try to send the notification again every 10 minutes, up to 5 times. If there is still no acknowledge, an email should be sent to the third party technical contact.
+If the third party does not acknowledge. Your server should try to send the notification again every 10 minutes, up to 5 times. If there is still no acknowledgement, an email should be sent to the third party technical contact.
 
 
-##### 3. Dictionnary
+##### 3. Dictionary
 
 Notification type values
 
@@ -180,8 +180,8 @@ PAYMENT_REJECTED | An error occur during the payment. The reason has to be add i
     | { type: PAYMENT_REJECTED, data: { code: 1001} }
     | Code 1001 : transaction mispaid - amount inferior
     | Code 1002 : transaction mispaid - amount superior
-CANCELED | Transaction has been canceled. The reason has to be add in data, ie :
-     | { type: ‘canceled’, data: { code: 1103 } }
+CANCELLED | Transaction has been cancelled. The reason has to be added in data, ie :
+     | { type: 'cancelled', data: { code: 1103 } }
      | Code 1103: Payment not received in time
 COMPLETE | Recipient has received the money. The transaction is done.
 
