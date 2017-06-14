@@ -144,7 +144,7 @@ countryFrom=FR&currencyFrom=EUR&countryTo=MX&currencyTo=MXN
                     "paymentAmount":100,
                     "receptionAmount":1784.45,  
                     "rate":18.02299,
-                    "quoteExpiration":12569537329,  
+                    "quoteExpiration": "2017-08-12T12:00:00.000Z",  
                     "fee":1,
                     "time":{"b":true,"d":3}
                 }
@@ -161,7 +161,7 @@ countryFrom=FR&currencyFrom=EUR&countryTo=MX&currencyTo=MXN
                     "paymentAmount":100,
                     "receptionAmount":1622.07,  
                     "rate":18.02299,
-                    "quoteExpiration":12569537329,  
+                    "quoteExpiration": "2017-08-12T12:00:00.000Z",   
                     "fee":10,
                     "time":{"b":false,"d":0}
                 }
