@@ -137,7 +137,7 @@ Only the status is returned.
 
 
 
-#### Update Sender [POST]
+#### Update Sender [PUT]
 
 Name  | Description 
 ----- | ----
