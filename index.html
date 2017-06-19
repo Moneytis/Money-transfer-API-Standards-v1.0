@@ -439,7 +439,7 @@ countryFrom=FR&amp;currencyFrom=EUR&amp;countryTo=MX&amp;currencyTo=MXN
                     </span><span class="nt">"paymentAmount"</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="w">
                     </span><span class="nt">"receptionAmount"</span><span class="p">:</span><span class="mf">1784.45</span><span class="p">,</span><span class="w">  
                     </span><span class="nt">"rate"</span><span class="p">:</span><span class="mf">18.02299</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"quoteExpiration"</span><span class="p">:</span><span class="mi">12569537329</span><span class="p">,</span><span class="w">  
+                    </span><span class="nt">"quoteExpiration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-08-12T12:00:00.000Z"</span><span class="p">,</span><span class="w">  
                     </span><span class="nt">"fee"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="w">
                     </span><span class="nt">"time"</span><span class="p">:{</span><span class="nt">"b"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="nt">"d"</span><span class="p">:</span><span class="mi">3</span><span class="p">}</span><span class="w">
                 </span><span class="p">}</span><span class="w">
@@ -456,7 +456,7 @@ countryFrom=FR&amp;currencyFrom=EUR&amp;countryTo=MX&amp;currencyTo=MXN
                     </span><span class="nt">"paymentAmount"</span><span class="p">:</span><span class="mi">100</span><span class="p">,</span><span class="w">
                     </span><span class="nt">"receptionAmount"</span><span class="p">:</span><span class="mf">1622.07</span><span class="p">,</span><span class="w">  
                     </span><span class="nt">"rate"</span><span class="p">:</span><span class="mf">18.02299</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"quoteExpiration"</span><span class="p">:</span><span class="mi">12569537329</span><span class="p">,</span><span class="w">  
+                    </span><span class="nt">"quoteExpiration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-08-12T12:00:00.000Z"</span><span class="p">,</span><span class="w">   
                     </span><span class="nt">"fee"</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span><span class="w">
                     </span><span class="nt">"time"</span><span class="p">:{</span><span class="nt">"b"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">"d"</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span><span class="w">
                 </span><span class="p">}</span><span class="w">
@@ -1825,6 +1825,450 @@ If the Money transfer operator and the client have specific terms in the contrac
 </tr>
 </tbody></table>
 
+          <h1 id="level-3-create-senders-and-handle-ky">Level 3 - Create senders and handle KY</h1>
+
+<h2 id="use-cases">Use cases</h2>
+
+<h3 id="create-and-manage-senders">Create and manage senders</h3>
+
+<p>Creating a sender requires 2 entries : </p>
+
+<ol>
+<li>Create the sender &ndash; see Create sender [POST]</li>
+<li>Eventually upload Sender’s Documents (KYC) &ndash; Upload sender document  [POST]</li>
+</ol>
+
+<h2 id="entry-points">Entry points</h2>
+
+<h3 id="sender">Sender</h3>
+
+<h4 id="create-sender-post">Create Sender [POST]</h4>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Path</td>
+<td>/sender</td>
+</tr>
+<tr>
+<td>Method</td>
+<td>POST</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Necessary</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Create a new sender.</td>
+</tr>
+</tbody></table>
+
+<h5 id="1-request">1. request</h5>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>*</td>
+<td>*</td>
+<td>*</td>
+<td>see Sender standardized</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+The sender information will be in the body with as index the &ldquo;name&rdquo; of the fields given in the user documentation (see Sender standardized).
+</aside>
+
+<h5 id="2-response">2. Response</h5>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> -X POST -d
+<span class="s1">'{
+   "senderType": "INDIVIDUAL",
+   "firstName" : "Jean",
+   "lastName" : "Dujardin",
+   "address" : {
+        "street" : "Denver Street #3, 11th Micro-District",
+        "city" : "Ulaanbaatar",
+        "postalCode" : "14190",
+        "country" : "MN"
+   },
+   "phoneNumber": "+33612345678",
+   "nationality": "FR",
+   "birthDate": "1980-08-12T12:00:00.000Z"
+}'</span> <span class="s2">"http://example.com/api/v1.0/sender"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w"> 
+   </span><span class="nt">"senderId"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"121323"</span><span class="p">,</span><span class="w"> 
+   </span><span class="nt">"senderType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INDIVIDUAL"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"firstName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Jean"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"lastName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Dujardin"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"address"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"street"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Denver Street #3, 11th Micro-District"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"city"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Ulaanbaatar"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"postalCode"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"14190"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"country"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"MN"</span><span class="w">
+   </span><span class="p">},</span><span class="w">
+   </span><span class="nt">"phoneNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+33612345678"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"nationality"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FR"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"birthDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1980-08-12T12:00:00.000Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>The sender information are returned.</p>
+
+<h4 id="upload-sender-document-post">Upload Sender Document [POST]</h4>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Path</td>
+<td>/sender/:senderId/uploadDocument</td>
+</tr>
+<tr>
+<td>Method</td>
+<td>POST</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Necessary</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Upload a new document for the sender.</td>
+</tr>
+</tbody></table>
+
+<h5 id="1-request">1. request</h5>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>:senderid</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Identification code of the sender (url parameter)</td>
+</tr>
+<tr>
+<td>documentType</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>see Dictionnary</td>
+</tr>
+<tr>
+<td>documentSubType</td>
+<td>string</td>
+<td>Conditional</td>
+<td>see Dictionnary</td>
+</tr>
+<tr>
+<td>file</td>
+<td>Object</td>
+<td>Mandatory</td>
+<td>the file itself containing the document</td>
+</tr>
+</tbody></table>
+
+<p>A file is :
+Name    |   Type    |   Requirement |   Description 
+&mdash;&ndash; | &mdash;- | &mdash;&ndash; | &mdash;-
+name  |   string  |   Mandatory   |  name of the document
+buffer   |   data   |  Mandatory |   the file buffer
+contentType  |   Object   |  Mandatory | content type of the document as defined in RFC 7231, section 3.1.1.5</p>
+
+<h5 id="2-response">2. Response</h5>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> -X POST -d
+<span class="s1">'{
+   "documentType" : "PROOFIDENTITY",
+   "documentSubType" : "PASSPORT",
+   "file": {
+      name : “PassportVR.jpg”
+      buffer : [ ... ]
+      contentType : “image/jpeg”
+   },
+
+}'</span> <span class="s2">"http://example.com/api/v1.0/sender/:senderId/uploadDocument"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w"> 
+   </span><span class="nt">"status"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
+</span><span class="err">}</span><span class="w">
+</span></code></pre>
+
+<p>Only the status is returned.</p>
+
+<h4 id="update-sender-post">Update Sender [POST]</h4>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Path</td>
+<td>/sender/:senderId</td>
+</tr>
+<tr>
+<td>Method</td>
+<td>PUT</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>Necessary</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Update a existing  sender.</td>
+</tr>
+</tbody></table>
+
+<h5 id="1-request">1. request</h5>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Requirement</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>senderId</td>
+<td>string</td>
+<td>Mandatory</td>
+<td>Identification code of the sender</td>
+</tr>
+<tr>
+<td>*</td>
+<td>*</td>
+<td>*</td>
+<td>see Sender standardized</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+The sender information will be in the body with as index the &ldquo;name&rdquo; of the fields given in the user documentation (see Sender standardized).
+</aside>
+
+<h5 id="2-response">2. Response</h5>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> -X PUT -d
+<span class="s1">'{
+   "senderType": "INDIVIDUAL",
+   "firstName" : "Jean",
+   "lastName" : "Dujardin",
+   "address" : {
+        "street" : "Denver Street #3, 11th Micro-District",
+        "city" : "Ulaanbaatar",
+        "postalCode" : "14190",
+        "country" : "MN"
+   },
+   "phoneNumber": "+33612345678",
+   "nationality": "FR",
+   "birthDate": "1980-08-12T12:00:00.000Z",
+}'</span> <span class="s2">"http://example.com/api/v1.0/sender/121323"</span>
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w"> 
+   </span><span class="nt">"senderId"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"121323"</span><span class="p">,</span><span class="w"> 
+   </span><span class="nt">"senderType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INDIVIDUAL"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"firstName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Jean"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"lastName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Dujardin"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"address"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"street"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Denver Street #3, 11th Micro-District"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"city"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Ulaanbaatar"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"postalCode"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"14190"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"country"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"MN"</span><span class="w">
+   </span><span class="p">},</span><span class="w">
+   </span><span class="nt">"phoneNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+33612345678"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"nationality"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FR"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"birthDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1980-08-12T12:00:00.000Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>The sender information are returned.</p>
+
+<h3 id="sender-standardized">Sender Standardized</h3>
+
+<p>Sender fields</p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Requirement</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>senderType</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>INDIVIDUAL, COMPANY</td>
+<td>Is the sender an Individual or a Company</td>
+</tr>
+<tr>
+<td>companyName</td>
+<td>Conditional</td>
+<td>string</td>
+<td>Regex : ^.{1-255}</td>
+<td>If sender is a company</td>
+</tr>
+<tr>
+<td>firstName</td>
+<td>Conditional</td>
+<td>string</td>
+<td>Regex : ^.{1-255}</td>
+<td>firstName of the sender or the representative of the company</td>
+</tr>
+<tr>
+<td>lastName</td>
+<td>Conditional</td>
+<td>string</td>
+<td>Regex : ^.{1-255}</td>
+<td>lastName of the sender or the representative of the company</td>
+</tr>
+<tr>
+<td>address</td>
+<td>Mandatory</td>
+<td>address</td>
+<td>see address</td>
+<td>address of the sender or the representative of the company</td>
+</tr>
+<tr>
+<td>companyAddress</td>
+<td>conditional</td>
+<td>address</td>
+<td>see address</td>
+<td>If sender is a company</td>
+</tr>
+<tr>
+<td>companyNumber</td>
+<td>conditional</td>
+<td>string</td>
+<td>Regex : ^.{1-255}</td>
+<td>If sender is a company</td>
+</tr>
+<tr>
+<td>phoneNumber</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^.{1-255}</td>
+<td></td>
+</tr>
+<tr>
+<td>nationality</td>
+<td>Mandatory</td>
+<td>country</td>
+<td>ISO 3166</td>
+<td>Nationality of the sender or the representative of the company</td>
+</tr>
+<tr>
+<td>birthDate</td>
+<td>Mandatory</td>
+<td>date</td>
+<td>at least 18years before now</td>
+<td>date of birth of the sender or the representative of the company</td>
+</tr>
+<tr>
+<td>ssn</td>
+<td>conditional</td>
+<td>string</td>
+<td>Regex : ^[\d]{9}$</td>
+<td>if US resident, Social Security number</td>
+</tr>
+</tbody></table>
+
+<h3 id="field-type">Field type</h3>
+
+<h4 id="country">Country</h4>
+
+<p>A country is a two characters string as describe in the ISO 3166.</p>
+
+<h4 id="currency">Currency</h4>
+
+<p>A country is a three characters string as describe in the ISO 5217.</p>
+
+<h4 id="address">Address</h4>
+
+<p>An address is an object with the following fields :</p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Requirement</th>
+<th>Type</th>
+<th>Constraint</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>street</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^.{1,255}</td>
+<td>Street and number</td>
+</tr>
+<tr>
+<td>city</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^.{1,255}</td>
+<td>city’s address</td>
+</tr>
+<tr>
+<td>country</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>see country</td>
+<td>Country’s address</td>
+</tr>
+<tr>
+<td>postalCode</td>
+<td>Mandatory</td>
+<td>string</td>
+<td>Regex : ^.{1,255}</td>
+<td>Postal code of the address</td>
+</tr>
+<tr>
+<td>state</td>
+<td>Conditional</td>
+<td>string</td>
+<td>Regex : ^.{1,255}</td>
+<td>State’s address</td>
+</tr>
+</tbody></table>
+
           <h1 id="dictionnary">Dictionnary</h1>
 
 <h2 id="payment-option-values">Payment option values</h2>
@@ -1856,6 +2300,31 @@ If the Money transfer operator and the client have specific terms in the contrac
 <li>BILLPAY</li>
 <li>MAIL</li>
 <li>PREPAIDCARD</li>
+</ul>
+
+<h2 id="document-type">document type</h2>
+
+<ul>
+<li>PROOFIDENTITY </li>
+<li>PROOFADDRESS</li>
+<li>PHOTO</li>
+<li>PROOFFUNDS</li>
+<li>PROOFCOMPANY</li>
+<li>PROOFSHAREHOLDING</li>
+</ul>
+
+<h2 id="document-subtype">document subtype</h2>
+
+<ul>
+<li><p>for PROOFIDENTITY:
+** PASSPORT
+** IDCARD
+** DRIVINGLICENCE</p></li>
+<li><p>for PROOFADDRESS:
+** BANKSTATEMENT
+** PHONEBILL
+** UTILITYBILL
+** TAXRETURN</p></li>
 </ul>
 
       </div>
