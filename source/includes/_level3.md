@@ -4,7 +4,7 @@
 
 ### Create and manage senders
 
-Creating a transaction requires 2 entries : 
+Creating a sender requires 2 entries : 
 
 1. Create the sender -- see Create sender [POST]
 2. Eventually upload Sender’s Documents (KYC) -- Upload sender document  [POST]
@@ -160,7 +160,7 @@ The sender information will be in the body with as index the "name" of the field
 ##### 2. Response
 
 ```shell
-curl -H "Content-Type: application/json" -X POST -d
+curl -H "Content-Type: application/json" -X PUT -d
 '{
    "senderType": "INDIVIDUAL",
    "firstName" : "Jean",
@@ -173,7 +173,7 @@ curl -H "Content-Type: application/json" -X POST -d
    },
    "phoneNumber": "+33612345678",
    "nationality": "FR",
-   "birthDate": "1980-08-12T12:00:00.000Z"
+   "birthDate": "1980-08-12T12:00:00.000Z",
 }' "http://example.com/api/v1.0/sender/121323"
 ```
 
@@ -212,70 +212,19 @@ The sender information are returned.
 
 Sender fields
 
-<!-- > Example FRANCE sender local bank :
-
-```json
-{
-   "senderType": "INDIVIDUAL",
-   "firstName" : "Jean",
-   "lastName" : "Dujardin",
-   "a"
-   "senderDetails" : {
-       "iban" : "FR7630004003200001019471656",
-       "bic": "ING23123XXX"
-   }
-}
-```
-
-> Example United-Kingdom sender local bank :
-
-```json
-{
-   "senderType": "COMPANY",
-   "companyName": "Virgin",
-   "receptionType": "LOCAL_BANK",
-   "senderDetails" : {
-       "sortCode" : "16-50-07",
-       "accountNumber" : "1019471656"
-   }
-}
-```
-
-> Example Mongolia sender local bank :
-
-```json
-{
-   "senderType": "INDIVIDUAL",
-   "firstName" : "Enkhtuyaa",
-   "lastName" : "Enkhjargal",
-   "receptionType" : "LOCAL_BANK",
-   "receptionDetails" : {
-      "bic": "AGMOMNUB",
-      "accountNumber" : "3212345678"
-   },
-    "address" : {
-        "street" : "Denver Street #3, 11th Micro-District",
-        "city" : "Ulaanbaatar",
-        "postalCode" : "14190",
-        "country" : "MN"
-    }
-   
-}
-
-``` -->
 
 Name    |   Requirement | Type | Constraint | Description 
  ----- | ---- | ---- | ---- | ---- 
 senderType | Mandatory | string | INDIVIDUAL, COMPANY | Is the sender an Individual or a Company 
 companyName | Conditional | string | Regex : ^.{1-255} | If sender is a company
-firstName | Conditional | string | Regex : ^.{1-255} | firstName of the sender or the representent of the company 
-lastName | Conditional | string | Regex : ^.{1-255} | lastName of the sender or the representent of the company
-address | Mandatory | address | see address | address of the sender or the representent of the company
+firstName | Conditional | string | Regex : ^.{1-255} | firstName of the sender or the representative of the company 
+lastName | Conditional | string | Regex : ^.{1-255} | lastName of the sender or the representative of the company
+address | Mandatory | address | see address | address of the sender or the representative of the company
 companyAddress | conditional | address | see address | If sender is a company
 companyNumber | conditional | string | Regex : ^.{1-255} | If sender is a company
 phoneNumber | Mandatory | string | Regex : ^.{1-255} | 
-nationality | Mandatory | country | ISO 3166 | Nationality of the sender or the representent of the company
-birthDate | Mandatory | date | at least 18years before now | date of birth of the sender or the representent of the company
+nationality | Mandatory | country | ISO 3166 | Nationality of the sender or the representative of the company
+birthDate | Mandatory | date | at least 18years before now | date of birth of the sender or the representative of the company
 ssn | conditional | string | Regex : ^[\\d]{9}$ | if US resident, Social Security number 
 
 
